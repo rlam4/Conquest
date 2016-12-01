@@ -1,4 +1,5 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -17,32 +18,38 @@
         android:text="Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:id="@+id/chatButton"
-        android:src="@drawable/chat_xml"
-        />
-
-    <ImageButton
-        android:text="Button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/chatButton"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/playButton"
-        android:src="@drawable/play_xml"
-        />
-
-    <ImageButton
-        android:text="Button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
         android:id="@+id/profileButton"
         android:src="@drawable/profile_xml"
         android:onClick="launchProfileActivity"
-        />
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true" />
+
+    <ImageButton
+        android:text="Button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/playButton"
+        android:src="@drawable/play_xml"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
+
+    <ImageButton
+        android:text="Button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/chatButton"
+        android:src="@drawable/chat_xml"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/arrow_up"
+        android:layout_marginTop="21dp"
+        android:id="@+id/imageView2"
+        android:layout_alignTop="@+id/profileButton"
+        android:layout_alignParentStart="true" />
 
 
 </RelativeLayout>
