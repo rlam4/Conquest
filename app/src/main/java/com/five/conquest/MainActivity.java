@@ -71,10 +71,10 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    protected void launchProfileActivity(View v) {
+    protected void onClickLaunchProfile (View v) {
         Log.i(TAG, "Profile button clicked");
-        //Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
-        //startActivity(intent);
+        Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+        startActivity(intent);
     }
 
     public void checkGPSPermission() {

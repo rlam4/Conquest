@@ -20,9 +20,9 @@
         android:layout_height="wrap_content"
         android:id="@+id/profileButton"
         android:src="@drawable/profile_xml"
-        android:onClick="launchProfileActivity"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:onClick="onClickLaunchProfile" />
 
     <ImageButton
         android:text="Button"
