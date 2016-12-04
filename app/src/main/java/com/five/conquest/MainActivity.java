@@ -35,7 +35,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     protected GoogleApiClient googleApiClient;
     protected LocationRequest locationRequest;
     protected Location currentLocation;
-    protected Boolean requestingLocationUpdates = false;
+    protected Boolean isInitialCameraMove = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,13 +105,18 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     public void onLocationChanged(Location location) {
         currentLocation = location;
 
-        LatLng currentPos = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(currentPos));
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(20));
+        Log.i(TAG, "Latitude: " + currentLocation.getLatitude() + " Longitude: " + currentLocation.getLongitude());
 
-        if(googleApiClient != null) {
-            LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
+        LatLng currentPos = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+
+        if(isInitialCameraMove) {
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(currentPos));
+            mMap.animateCamera(CameraUpdateFactory.zoomTo(20));
+            isInitialCameraMove = false;
         }
+
+        //TODO: Add in position tracking for when player hits play button here
+
     }
 
     @Override
