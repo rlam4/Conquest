@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -46,6 +47,8 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
     private ArrayList<Polygon> mapGrid = new ArrayList<Polygon>();
 
+    private ImageButton profileButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +60,17 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        profileButton = (ImageButton) findViewById(R.id.profileButton);
+        profileButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(TAG, "Profile button clicked");
+                Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+                startActivity(intent);
+            }
+        });
+
     }
 
 
@@ -82,11 +96,6 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    protected void onClickLaunchProfile (View v) {
-        Log.i(TAG, "Profile button clicked");
-        Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
-        startActivity(intent);
-    }
 
     private void drawGameBoard() {
         //Adds the boundary of the playable area to the map
