@@ -48,7 +48,6 @@ public class GameBoard {
 
                 // adds the new Grid to the ArrayList of Grids
                 _grids.add(new Grid(tl, tr, bl, br));
-                Log.i(TAG, "Adding grid to _grids");
             }
         }
     }

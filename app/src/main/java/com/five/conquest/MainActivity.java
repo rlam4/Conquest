@@ -152,8 +152,6 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         Polygon playableArea = mMap.addPolygon(playableAreaOptions);
         mapGrid.add(playableArea);
 
-        //TODO: Fix this code depending on how GameBoard is implemented
-
         //Adds all the gameboard grids to the map
         for(Grid grid : gameboard.getGrids()) {
             PolygonOptions gridOptions = new PolygonOptions();
@@ -168,8 +166,6 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
             mapGrid.add(gridDrawing);
         }
     }
-
-    //TODO: Fix this code depending on how the enumerated Team class and grid is implemented
 
     private int getGridColor(Grid grid) {
         int red = 0;
