@@ -26,6 +26,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.ArrayList;
 
@@ -43,11 +45,18 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     protected GoogleApiClient googleApiClient;
     protected LocationRequest locationRequest;
     protected Location currentLocation;
+
     protected Boolean isInitialCameraMove = true;
+    protected Boolean isTrackingRun = false;
 
     private ArrayList<Polygon> mapGrid = new ArrayList<Polygon>();
+    private ArrayList<LatLng> pathPoints = new ArrayList<LatLng>();
+    private PolylineOptions pathOptions;
+    private Polyline path;
 
     private ImageButton profileButton;
+    private ImageButton playButton;
+    private ImageButton chatButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +80,25 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
+        playButton = (ImageButton) findViewById(R.id.playButton);
+        playButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                if(!isTrackingRun) {
+                    playButton.setImageResource(R.drawable.stop_xml);
+                    pathOptions = new PolylineOptions();
+                    path = mMap.addPolyline(pathOptions);
+                    isTrackingRun = true;
+                } else {
+                    playButton.setImageResource(R.drawable.play_xml);
+                    isTrackingRun = false;
+                    path.remove();
+
+                    //TODO: Implement the capturing of territories by checking the list of LatLng
+                }
+            }
+        });
     }
 
 
@@ -95,6 +123,8 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
             mMap.setMyLocationEnabled(true);
         }
     }
+
+
 
 
     private void drawGameBoard() {
@@ -214,7 +244,12 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
             isInitialCameraMove = false;
         }
 
-        //TODO: Add in position tracking for when player hits play button here
+        //If this creates janky paths, then you can move this code into a timer which checks the current position every so often
+        if(isTrackingRun) {
+            Log.i(TAG, "Adding new point to run path");
+            pathPoints.add(currentPos);
+            path.setPoints(pathPoints);
+        }
 
     }
 
