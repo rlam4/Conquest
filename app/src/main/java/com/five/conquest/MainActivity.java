@@ -3,6 +3,7 @@ package com.five.conquest;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
@@ -22,12 +23,18 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Polygon;
+import com.google.android.gms.maps.model.PolygonOptions;
+
+import java.util.ArrayList;
 
 public class MainActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
     private GoogleMap mMap;
 
     protected static final String TAG = "Conquest";
+    protected static final int GRID_MAX_VALUE = 100;
+
     public static final long UPDATE_INTERVAL = 1000;
     public static final long FASTEST_UPDATE_INTERVAL = UPDATE_INTERVAL/2;
     protected static int PERMISSION_REQUEST_FINE_LOCATION = 1;
@@ -36,6 +43,8 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     protected LocationRequest locationRequest;
     protected Location currentLocation;
     protected Boolean isInitialCameraMove = true;
+
+    private ArrayList<Polygon> mapGrid = new ArrayList<Polygon>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +74,8 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
+        drawGameBoard();
+
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             buildGoogleApiClient();
             mMap.setMyLocationEnabled(true);
@@ -76,6 +87,85 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
         startActivity(intent);
     }
+
+    private void drawGameBoard() {
+        //Adds the boundary of the playable area to the map
+        PolygonOptions playableAreaOptions = new PolygonOptions();
+
+        //TODO: Replace hard-coded numbers with the getters from Gameboard
+        playableAreaOptions.add(new LatLng(39.000209, -76.950282));
+        playableAreaOptions.add(new LatLng(39.000209, -76.93504));
+        playableAreaOptions.add(new LatLng(38.980590, -76.93504));
+        playableAreaOptions.add(new LatLng(38.98050, -76.950282));
+        /*
+        playableAreaOptions.add(gameboard.getTopLeft());
+        playableAreaOptions.add(gameboard.getTopRight());
+        playableAreaOptions.add(gameboard.getBottomLeft());
+        playableAreaOptions.add(gameboard.getBottomRight());
+         */
+
+        playableAreaOptions.strokeColor(Color.BLACK);
+        playableAreaOptions.strokeWidth(7);
+        Polygon playableArea = mMap.addPolygon(playableAreaOptions);
+        mapGrid.add(playableArea);
+
+        //TODO: Fix this code depending on how GameBoard is implemented
+        /*
+        //Adds all the gameboard grids to the map
+        for(Grid grid : gameboard.getGrids()) {
+            PolygonOptions gridOptions = new PolygonOptions();
+            gridOptions.add(new LatLng(grid.getTopLeft()));
+            gridOptions.add(new LatLng(grid.getTopRight()));
+            gridOptions.add(new LatLng(grid.getBottomLeft()));
+            gridOptions.add(new LatLng(grid.getBottomRight()));
+            gridOptions.strokeWidth(4);
+            gridOptions.strokeColor(getBorderColor(grid));
+            gridOptions.fillColor(getGridColor(grid));
+        }
+        */
+    }
+
+    //TODO: Fix this code depending on how the enumerated Team class and grid is implemented
+    /*
+    private int getGridColor(Grid grid) {
+        int red = 0;
+        int green = 0;
+        int blue = 0;
+        switch(grid.getTeam()) {
+            case "Knights":
+                red = 255;
+                break;
+            case "Pirates":
+                green = 255;
+                break;
+            case "Ninjas":
+                blue = 255;
+                break;
+            case "Neutral":
+                return(Color.TRANSPARENT);
+        }
+        int alpha = Math.round((255/GRID_MAX_VALUE) * grid.getValue());
+        return(Color.argb(alpha, red, green, blue));
+    }
+
+    private int getBorderColor(Grid grid) {
+        int color = 0;
+        switch(grid.getTeam()) {
+            case "Knights":
+                color = Color.RED;
+                break;
+            case "Pirates":
+                color = Color.GREEN;
+                break;
+            case "Ninjas":
+                color = Color.BLUE;
+                break;
+            case "Neutral":
+                color = Color.BLACK;
+        }
+        return color;
+    }
+    */
 
     public void checkGPSPermission() {
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
