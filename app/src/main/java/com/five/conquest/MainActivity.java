@@ -3,6 +3,7 @@ package com.five.conquest;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
@@ -10,6 +11,7 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -22,12 +24,20 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Polygon;
+import com.google.android.gms.maps.model.PolygonOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
+
+import java.util.ArrayList;
 
 public class MainActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
     private GoogleMap mMap;
 
     protected static final String TAG = "Conquest";
+    protected static final int GRID_MAX_VALUE = 100;
+
     public static final long UPDATE_INTERVAL = 1000;
     public static final long FASTEST_UPDATE_INTERVAL = UPDATE_INTERVAL/2;
     protected static int PERMISSION_REQUEST_FINE_LOCATION = 1;
@@ -35,7 +45,18 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     protected GoogleApiClient googleApiClient;
     protected LocationRequest locationRequest;
     protected Location currentLocation;
-    protected Boolean requestingLocationUpdates = false;
+
+    protected Boolean isInitialCameraMove = true;
+    protected Boolean isTrackingRun = false;
+
+    private ArrayList<Polygon> mapGrid = new ArrayList<Polygon>();
+    private ArrayList<LatLng> pathPoints = new ArrayList<LatLng>();
+    private PolylineOptions pathOptions;
+    private Polyline path;
+
+    private ImageButton profileButton;
+    private ImageButton playButton;
+    private ImageButton chatButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +69,36 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        profileButton = (ImageButton) findViewById(R.id.profileButton);
+        profileButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(TAG, "Profile button clicked");
+                Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        playButton = (ImageButton) findViewById(R.id.playButton);
+        playButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                if(!isTrackingRun) {
+                    playButton.setImageResource(R.drawable.stop_xml);
+                    pathOptions = new PolylineOptions();
+                    path = mMap.addPolyline(pathOptions);
+                    isTrackingRun = true;
+                } else {
+                    playButton.setImageResource(R.drawable.play_xml);
+                    isTrackingRun = false;
+                    path.remove();
+
+                    //TODO: Implement the capturing of territories by checking the list of LatLng
+                }
+            }
+        });
     }
 
 
@@ -65,17 +116,95 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
+        drawGameBoard();
+
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             buildGoogleApiClient();
             mMap.setMyLocationEnabled(true);
         }
     }
 
-    protected void onClickLaunchProfile (View v) {
-        Log.i(TAG, "Profile button clicked");
-        Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
-        startActivity(intent);
+
+
+
+    private void drawGameBoard() {
+        //Adds the boundary of the playable area to the map
+        PolygonOptions playableAreaOptions = new PolygonOptions();
+
+        //TODO: Replace hard-coded numbers with the getters from Gameboard
+        playableAreaOptions.add(new LatLng(39.000209, -76.950282));
+        playableAreaOptions.add(new LatLng(39.000209, -76.93504));
+        playableAreaOptions.add(new LatLng(38.980590, -76.93504));
+        playableAreaOptions.add(new LatLng(38.98050, -76.950282));
+        /*
+        playableAreaOptions.add(gameboard.getTopLeft());
+        playableAreaOptions.add(gameboard.getTopRight());
+        playableAreaOptions.add(gameboard.getBottomLeft());
+        playableAreaOptions.add(gameboard.getBottomRight());
+         */
+
+        playableAreaOptions.strokeColor(Color.BLACK);
+        playableAreaOptions.strokeWidth(7);
+        Polygon playableArea = mMap.addPolygon(playableAreaOptions);
+        mapGrid.add(playableArea);
+
+        //TODO: Fix this code depending on how GameBoard is implemented
+        /*
+        //Adds all the gameboard grids to the map
+        for(Grid grid : gameboard.getGrids()) {
+            PolygonOptions gridOptions = new PolygonOptions();
+            gridOptions.add(new LatLng(grid.getTopLeft()));
+            gridOptions.add(new LatLng(grid.getTopRight()));
+            gridOptions.add(new LatLng(grid.getBottomLeft()));
+            gridOptions.add(new LatLng(grid.getBottomRight()));
+            gridOptions.strokeWidth(4);
+            gridOptions.strokeColor(getBorderColor(grid));
+            gridOptions.fillColor(getGridColor(grid));
+        }
+        */
     }
+
+    //TODO: Fix this code depending on how the enumerated Team class and grid is implemented
+    /*
+    private int getGridColor(Grid grid) {
+        int red = 0;
+        int green = 0;
+        int blue = 0;
+        switch(grid.getTeam()) {
+            case "Knights":
+                red = 255;
+                break;
+            case "Pirates":
+                green = 255;
+                break;
+            case "Ninjas":
+                blue = 255;
+                break;
+            case "Neutral":
+                return(Color.TRANSPARENT);
+        }
+        int alpha = Math.round((255/GRID_MAX_VALUE) * grid.getValue());
+        return(Color.argb(alpha, red, green, blue));
+    }
+
+    private int getBorderColor(Grid grid) {
+        int color = 0;
+        switch(grid.getTeam()) {
+            case "Knights":
+                color = Color.RED;
+                break;
+            case "Pirates":
+                color = Color.GREEN;
+                break;
+            case "Ninjas":
+                color = Color.BLUE;
+                break;
+            case "Neutral":
+                color = Color.BLACK;
+        }
+        return color;
+    }
+    */
 
     public void checkGPSPermission() {
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -105,13 +234,23 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     public void onLocationChanged(Location location) {
         currentLocation = location;
 
-        LatLng currentPos = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(currentPos));
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(20));
+        Log.i(TAG, "Latitude: " + currentLocation.getLatitude() + " Longitude: " + currentLocation.getLongitude());
 
-        if(googleApiClient != null) {
-            LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
+        LatLng currentPos = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+
+        if(isInitialCameraMove) {
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(currentPos));
+            mMap.animateCamera(CameraUpdateFactory.zoomTo(20));
+            isInitialCameraMove = false;
         }
+
+        //If this creates janky paths, then you can move this code into a timer which checks the current position every so often
+        if(isTrackingRun) {
+            Log.i(TAG, "Adding new point to run path");
+            pathPoints.add(currentPos);
+            path.setPoints(pathPoints);
+        }
+
     }
 
     @Override
