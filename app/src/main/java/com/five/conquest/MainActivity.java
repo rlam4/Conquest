@@ -46,6 +46,8 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     protected LocationRequest locationRequest;
     protected Location currentLocation;
 
+    protected GameBoard gameboard;
+
     protected Boolean isInitialCameraMove = true;
     protected Boolean isTrackingRun = false;
 
@@ -63,6 +65,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
+        gameboard = new GameBoard();
         checkGPSPermission();
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -131,17 +134,18 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         //Adds the boundary of the playable area to the map
         PolygonOptions playableAreaOptions = new PolygonOptions();
 
-        //TODO: Replace hard-coded numbers with the getters from Gameboard
+        //TODO: Delete this code
+        /*
         playableAreaOptions.add(new LatLng(39.000209, -76.950282));
         playableAreaOptions.add(new LatLng(39.000209, -76.93504));
         playableAreaOptions.add(new LatLng(38.980590, -76.93504));
         playableAreaOptions.add(new LatLng(38.98050, -76.950282));
-        /*
+        */
+
         playableAreaOptions.add(gameboard.getTopLeft());
         playableAreaOptions.add(gameboard.getTopRight());
-        playableAreaOptions.add(gameboard.getBottomLeft());
         playableAreaOptions.add(gameboard.getBottomRight());
-         */
+        playableAreaOptions.add(gameboard.getBottomLeft());
 
         playableAreaOptions.strokeColor(Color.BLACK);
         playableAreaOptions.strokeWidth(7);
@@ -149,38 +153,39 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         mapGrid.add(playableArea);
 
         //TODO: Fix this code depending on how GameBoard is implemented
-        /*
+
         //Adds all the gameboard grids to the map
         for(Grid grid : gameboard.getGrids()) {
             PolygonOptions gridOptions = new PolygonOptions();
-            gridOptions.add(new LatLng(grid.getTopLeft()));
-            gridOptions.add(new LatLng(grid.getTopRight()));
-            gridOptions.add(new LatLng(grid.getBottomLeft()));
-            gridOptions.add(new LatLng(grid.getBottomRight()));
+            gridOptions.add(grid.getTopLeft());
+            gridOptions.add(grid.getTopRight());
+            gridOptions.add(grid.getBottomRight());
+            gridOptions.add(grid.getBottomLeft());
             gridOptions.strokeWidth(4);
             gridOptions.strokeColor(getBorderColor(grid));
             gridOptions.fillColor(getGridColor(grid));
+            Polygon gridDrawing = mMap.addPolygon(gridOptions);
+            mapGrid.add(gridDrawing);
         }
-        */
     }
 
     //TODO: Fix this code depending on how the enumerated Team class and grid is implemented
-    /*
+
     private int getGridColor(Grid grid) {
         int red = 0;
         int green = 0;
         int blue = 0;
         switch(grid.getTeam()) {
-            case "Knights":
+            case RED:
                 red = 255;
                 break;
-            case "Pirates":
+            case GREEN:
                 green = 255;
                 break;
-            case "Ninjas":
+            case BLUE:
                 blue = 255;
                 break;
-            case "Neutral":
+            case NEUTRAL:
                 return(Color.TRANSPARENT);
         }
         int alpha = Math.round((255/GRID_MAX_VALUE) * grid.getValue());
@@ -190,21 +195,21 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     private int getBorderColor(Grid grid) {
         int color = 0;
         switch(grid.getTeam()) {
-            case "Knights":
+            case RED:
                 color = Color.RED;
                 break;
-            case "Pirates":
+            case GREEN:
                 color = Color.GREEN;
                 break;
-            case "Ninjas":
+            case BLUE:
                 color = Color.BLUE;
                 break;
-            case "Neutral":
+            case NEUTRAL:
                 color = Color.BLACK;
         }
         return color;
     }
-    */
+
 
     public void checkGPSPermission() {
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {

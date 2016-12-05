@@ -1,8 +1,7 @@
 package com.five.conquest;
 
-        import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLng;
 
-        import static com.five.conquest.Grid.Color.GRAY;
 
 /**
  * Created by Mike on 12/4/2016.
@@ -19,8 +18,8 @@ public class Grid{
     private LatLng _btmRight;
 
     // enum for who owns the grid
-    public enum Color {RED, GREEN, BLUE, GRAY;}
-    private Color _owner;
+    public enum Team {RED, GREEN, BLUE, NEUTRAL;}
+    private Team _owner;
 
     // value is the amount of hold a given team has on a grid
     private float _value;
@@ -31,28 +30,30 @@ public class Grid{
         _btmLeft = btmLeft;
         _btmRight = btmRight;
         _value = 0f;
-        _owner = GRAY;
+        _owner = Team.NEUTRAL;
     }
 
-    public LatLng get_topLeft(){
+    public LatLng getTopLeft(){
         return _topLeft;
     }
 
-    public LatLng get_btmLeft() {
+    public LatLng getBottomLeft() {
         return _btmLeft;
     }
 
-    public LatLng get_btmRight() {
+    public LatLng getBottomRight() {
         return _btmRight;
     }
 
-    public LatLng get_topRight() {
+    public LatLng getTopRight() {
         return _topRight;
     }
 
-    public float get_value() {
+    public float getValue() {
         return _value;
     }
+
+    public Team getTeam() { return _owner; }
 
     public void set_value(float value) {
         _value = value;
