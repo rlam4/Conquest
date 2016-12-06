@@ -18,7 +18,7 @@ public class Grid{
     private LatLng _btmRight;
 
     // enum for who owns the grid
-    public enum Team {RED, GREEN, BLUE, NEUTRAL;}
+
     private Team _owner;
 
     // value is the amount of hold a given team has on a grid
@@ -55,8 +55,10 @@ public class Grid{
 
     public Team getTeam() { return _owner; }
 
-    public void set_value(float value) {
+    public void setValue(float value) {
         _value = value;
     }
+
+    public void setTeam(Team team) {_owner = team; }
 
 }

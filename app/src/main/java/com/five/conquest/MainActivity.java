@@ -60,11 +60,17 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     private ImageButton playButton;
     private ImageButton chatButton;
 
+    //TODO: Replace this default user
+    private User player;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
+        player = new User("Default");
+        player.attack = 5;
+        player.defense = 5;
         gameboard = new GameBoard();
         checkGPSPermission();
 
@@ -98,7 +104,10 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                     isTrackingRun = false;
                     path.remove();
 
-                    //TODO: Implement the capturing of territories by checking the list of LatLng
+                    //Update gameboard
+                    updateGrid();
+                    mMap.clear();
+                    drawGameBoard();
                 }
             }
         });
@@ -164,6 +173,36 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
             gridOptions.fillColor(getGridColor(grid));
             Polygon gridDrawing = mMap.addPolygon(gridOptions);
             mapGrid.add(gridDrawing);
+        }
+    }
+
+    private void updateGrid() {
+        ArrayList<Grid> visited = new ArrayList<Grid>();
+        for(LatLng coordinate : pathPoints) {
+            for(Grid grid : gameboard.getGrids()) {
+                if(visited.contains(grid)) {
+                    continue;
+                }
+                if(coordinate.latitude > grid.getBottomLeft().latitude && coordinate.latitude < gameboard.getTopLeft().latitude
+                        && coordinate.longitude > grid.getBottomLeft().longitude && coordinate.longitude < gameboard.getBottomRight().longitude) {
+                    //TODO: Fix the User class's team to be enum, maybe move the grid team class outside to its own thing
+                    if(grid.getTeam() == player.team) {
+                        grid.setValue(grid.getValue() + player.defense);
+                    } else {
+                        if(grid.getValue() - player.attack > 0) {
+                            grid.setValue(grid.getValue() - player.attack);
+                        } else if (grid.getValue() - player.attack == 0) {
+                            grid.setValue(0);
+                            grid.setTeam(Team.NEUTRAL);
+                        } else {
+                            grid.setValue(player.attack - grid.getValue());
+                            grid.setTeam(player.team);
+                        }
+                    }
+                    visited.add(grid);
+                    break;
+                }
+            }
         }
     }
 
