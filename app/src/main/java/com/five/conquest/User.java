@@ -13,7 +13,7 @@ public class User {
 
     String username;
     String password; //Not yet used, should not be here for security measures.
-    Team team; //Not yet used.
+    String team; //Not yet used.
 
     ArrayList<User> friendList;
 
