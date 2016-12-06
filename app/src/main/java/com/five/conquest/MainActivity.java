@@ -1,6 +1,7 @@
 package com.five.conquest;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -9,6 +10,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
@@ -57,6 +59,10 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     private ArrayList<LatLng> pathPoints;
     private PolylineOptions pathOptions;
     private Polyline path;
+    private long startTime;
+    private long stopTime;
+    private int attackPointsContributed;
+    private int defensePointsContributed;
 
     private ImageButton profileButton;
     private ImageButton playButton;
@@ -115,17 +121,22 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                     pathPoints = new ArrayList<LatLng>();
                     pathOptions = new PolylineOptions();
                     path = mMap.addPolyline(pathOptions);
+                    startTime = System.currentTimeMillis();
+                    attackPointsContributed = 0;
+                    defensePointsContributed = 0;
                     isTrackingRun = true;
                 } else {
                     //Switches the image in the button, stops tracking the run path
                     playButton.setImageResource(R.drawable.play_xml);
                     isTrackingRun = false;
                     path.remove();
+                    stopTime = System.currentTimeMillis();
 
                     //Updates the gameboard
                     updateGrid();
                     mMap.clear();
                     drawGameBoard();
+                    showPostRunAnalysis();
                 }
             }
         });
@@ -138,7 +149,6 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
         //Draws the grids of the gameboard over the map
         drawGameBoard();
-
 
         //Checks if you have location permission, then starts the location updates
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -200,8 +210,10 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                         //If it belongs to the user's team, then add the player's defense to the points value
                         if(grid.getValue() + player.defense > GRID_MAX_VALUE) {
                             grid.setValue(GRID_MAX_VALUE);
+                            defensePointsContributed += GRID_MAX_VALUE - grid.getValue();
                         } else {
                             grid.setValue(grid.getValue() + player.defense);
+                            defensePointsContributed += player.defense;
                         }
                     } else {
                         if(grid.getValue() - player.attack > 0) {
@@ -216,6 +228,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                             grid.setValue(player.attack - grid.getValue());
                             grid.setTeam(player.team);
                         }
+                        attackPointsContributed += player.attack;
                     }
                     visited.add(grid);
                     break;
@@ -275,6 +288,73 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         return color;
     }
 
+    /**
+     * Shows run statistics after hitting the stop button
+     */
+    private void showPostRunAnalysis() {
+        //TODO: Change distance and pace programatically based on user's options of miles or kilometers
+        float distanceInMeters = 0;
+        for(int i = 1; i < pathPoints.size(); i++) {
+            float[] results = new float[3];
+            LatLng start = pathPoints.get(i-1);
+            LatLng stop = pathPoints.get(i);
+            Location.distanceBetween(start.latitude, start.longitude, stop.latitude, stop.longitude, results);
+            distanceInMeters += results[0];
+        }
+        double distanceInMiles = distanceInMeters/1609.34;
+
+        long[] readableTime = new long[3];
+        long timeElapsedInMillis = stopTime - startTime;
+        convertTimeToReadable(timeElapsedInMillis, readableTime);
+
+        double pace = (timeElapsedInMillis/distanceInMiles)/60000;
+
+        StringBuilder dialogMessage = new StringBuilder();
+        dialogMessage.append("Distance: " + (Math.floor(distanceInMiles * 100) / 100) + " miles\n") ;
+        dialogMessage.append("Time: ");
+        if(readableTime[0] < 10) {
+            dialogMessage.append("0");
+        }
+        dialogMessage.append(readableTime[0] + ":");
+        if(readableTime[1] < 10) {
+            dialogMessage.append("0");
+        }
+        dialogMessage.append(readableTime[1] + ":");
+        if(readableTime[2] < 10) {
+            dialogMessage.append("0");
+        }
+        dialogMessage.append(readableTime[2] + "\n");
+        dialogMessage.append("Pace: " + (Math.floor(pace * 100) / 100) + " min/mile\n\n");
+        dialogMessage.append("Attack Points Contributed: " + attackPointsContributed + "\n");
+        dialogMessage.append("Defense Points Contributed: " + defensePointsContributed + "\n");
+        //TODO: Uncomment when exp is implemented
+        //dialogMessage.append("EXP Gained: " + (attackPointsContributed + defensePointsContributed) + "\n");
+
+        final AlertDialog.Builder runAnalysis = new AlertDialog.Builder(this);
+        runAnalysis.setTitle("Post-Run Analysis");
+        runAnalysis.setMessage(dialogMessage.toString());
+        runAnalysis.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                //Do nothing
+            }
+        });
+        runAnalysis.show();
+    }
+
+    /**
+     * Takes in a time elapsed and converts into hours, minutes, and seconds.
+     * @param timeElapsed
+     * @param results
+     */
+    private void convertTimeToReadable(long timeElapsed, long[] results) {
+        long remainingTime = timeElapsed;
+        results[0] = remainingTime/3600000;
+        remainingTime -= results[0] * 3600000;
+        results[1] = remainingTime/60000;
+        remainingTime -= results[1] * 60000;
+        results[2] = remainingTime/1000;
+    }
+
 
     public void checkGPSPermission() {
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -311,7 +391,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         //When initally launching the app, moves the camera to the user's location. We don't want the camera to move whenever you change location
         if(isInitialCameraMove) {
             mMap.moveCamera(CameraUpdateFactory.newLatLng(currentPos));
-            mMap.animateCamera(CameraUpdateFactory.zoomTo(20));
+            mMap.animateCamera(CameraUpdateFactory.zoomTo(16));
             isInitialCameraMove = false;
         }
 
