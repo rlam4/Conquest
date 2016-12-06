@@ -1,5 +1,7 @@
 package com.five.conquest;
 
+import com.five.conquest.Chat.Team;
+
 import java.util.ArrayList;
 
 public class User {
@@ -13,7 +15,7 @@ public class User {
 
     String username;
     String password; //Not yet used, should not be here for security measures.
-    String team; //Not yet used.
+    Team team; //Not yet used.
 
     ArrayList<User> friendList;
 
