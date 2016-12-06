@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 
 import com.five.conquest.Chat.SocialActivity;
@@ -56,9 +57,9 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     private PolylineOptions pathOptions;
     private Polyline path;
 
-    private ImageButton profileButton;
-    private ImageButton playButton;
-    private ImageButton chatButton;
+    private Button profileButton;
+    private Button playButton;
+    private Button chatButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +74,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        profileButton = (ImageButton) findViewById(R.id.profileButton);
+        profileButton = (Button) findViewById(R.id.profileButton);
         profileButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -83,7 +84,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
-        chatButton = (ImageButton) findViewById(R.id.chatButton);
+        chatButton = (Button) findViewById(R.id.chatButton);
         chatButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -93,18 +94,20 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
-        playButton = (ImageButton) findViewById(R.id.playButton);
+        playButton = (Button) findViewById(R.id.playButton);
         playButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 if(!isTrackingRun) {
-                    playButton.setImageResource(R.drawable.stop_xml);
+                    playButton.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.stop_xml, 0, 0);
+                    playButton.setText("Stop");
                     pathOptions = new PolylineOptions();
                     path = mMap.addPolyline(pathOptions);
                     isTrackingRun = true;
                 } else {
-                    playButton.setImageResource(R.drawable.play_xml);
+                    playButton.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.play_xml, 0, 0);
+                    playButton.setText("Play");
                     isTrackingRun = false;
                     path.remove();
 
