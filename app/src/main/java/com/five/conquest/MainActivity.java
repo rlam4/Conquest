@@ -13,6 +13,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -64,9 +65,9 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     private int attackPointsContributed;
     private int defensePointsContributed;
 
-    private ImageButton profileButton;
-    private ImageButton playButton;
-    private ImageButton chatButton;
+    private Button profileButton;
+    private Button playButton;
+    private Button chatButton;
 
     //TODO: Replace this default user with actual player settings
     private User player;
@@ -85,12 +86,12 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         gameboard = new GameBoard();
         checkGPSPermission();
 
+        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        //Connects the buttons to their respective functions
-        profileButton = (ImageButton) findViewById(R.id.profileButton);
+        profileButton = (Button) findViewById(R.id.profileButton);
         profileButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -100,7 +101,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
-        chatButton = (ImageButton) findViewById(R.id.chatButton);
+        chatButton = (Button) findViewById(R.id.chatButton);
         chatButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -110,15 +111,14 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
-        playButton = (ImageButton) findViewById(R.id.playButton);
+        playButton = (Button) findViewById(R.id.playButton);
         playButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 if(!isTrackingRun) {
-                    //Switches the image in the button, starts tracking the run path
-                    playButton.setImageResource(R.drawable.stop_xml);
-                    pathPoints = new ArrayList<LatLng>();
+                    playButton.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.stop_xml, 0, 0);
+                    playButton.setText("Stop");
                     pathOptions = new PolylineOptions();
                     path = mMap.addPolyline(pathOptions);
                     startTime = System.currentTimeMillis();
@@ -126,8 +126,8 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                     defensePointsContributed = 0;
                     isTrackingRun = true;
                 } else {
-                    //Switches the image in the button, stops tracking the run path
-                    playButton.setImageResource(R.drawable.play_xml);
+                    playButton.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.play_xml, 0, 0);
+                    playButton.setText("Play");
                     isTrackingRun = false;
                     path.remove();
                     stopTime = System.currentTimeMillis();
@@ -391,7 +391,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         //When initally launching the app, moves the camera to the user's location. We don't want the camera to move whenever you change location
         if(isInitialCameraMove) {
             mMap.moveCamera(CameraUpdateFactory.newLatLng(currentPos));
-            mMap.animateCamera(CameraUpdateFactory.zoomTo(16));
+            mMap.animateCamera(CameraUpdateFactory.zoomTo(20));
             isInitialCameraMove = false;
         }
 
