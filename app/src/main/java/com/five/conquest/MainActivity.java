@@ -51,8 +51,8 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     protected Boolean isInitialCameraMove = true;
     protected Boolean isTrackingRun = false;
 
-    private ArrayList<Polygon> mapGrid = new ArrayList<Polygon>();
-    private ArrayList<LatLng> pathPoints = new ArrayList<LatLng>();
+    private ArrayList<Polygon> mapGrid;
+    private ArrayList<LatLng> pathPoints;
     private PolylineOptions pathOptions;
     private Polyline path;
 
@@ -60,7 +60,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     private ImageButton playButton;
     private ImageButton chatButton;
 
-    //TODO: Replace this default user
+    //TODO: Replace this default user with actual player settings
     private User player;
 
     @Override
@@ -68,17 +68,20 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
+        //TODO: Replace this default user
         player = new User("Default");
-        player.attack = 5;
-        player.defense = 5;
+        player.attack = 20;
+        player.defense = 20;
+        player.team = Team.BLUE;
+
         gameboard = new GameBoard();
         checkGPSPermission();
 
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        //Connects the buttons to their respective functions
         profileButton = (ImageButton) findViewById(R.id.profileButton);
         profileButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,16 +98,19 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onClick(View v) {
                 if(!isTrackingRun) {
+                    //Switches the image in the button, starts tracking the run path
                     playButton.setImageResource(R.drawable.stop_xml);
+                    pathPoints = new ArrayList<LatLng>();
                     pathOptions = new PolylineOptions();
                     path = mMap.addPolyline(pathOptions);
                     isTrackingRun = true;
                 } else {
+                    //Switches the image in the button, stops tracking the run path
                     playButton.setImageResource(R.drawable.play_xml);
                     isTrackingRun = false;
                     path.remove();
 
-                    //Update gameboard
+                    //Updates the gameboard
                     updateGrid();
                     mMap.clear();
                     drawGameBoard();
@@ -113,23 +119,16 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         });
     }
 
-
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
+        //Draws the grids of the gameboard over the map
         drawGameBoard();
 
+
+        //Checks if you have location permission, then starts the location updates
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             buildGoogleApiClient();
             mMap.setMyLocationEnabled(true);
@@ -137,19 +136,14 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
 
-
-
+    /**
+     * Draws the boundary of the playable area and the grids over the google map
+     */
     private void drawGameBoard() {
+        mapGrid = new ArrayList<Polygon>();
+
         //Adds the boundary of the playable area to the map
         PolygonOptions playableAreaOptions = new PolygonOptions();
-
-        //TODO: Delete this code
-        /*
-        playableAreaOptions.add(new LatLng(39.000209, -76.950282));
-        playableAreaOptions.add(new LatLng(39.000209, -76.93504));
-        playableAreaOptions.add(new LatLng(38.980590, -76.93504));
-        playableAreaOptions.add(new LatLng(38.98050, -76.950282));
-        */
 
         playableAreaOptions.add(gameboard.getTopLeft());
         playableAreaOptions.add(gameboard.getTopRight());
@@ -176,25 +170,37 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
+    /**
+     * After finishing a run, this function checks every GPS coordinate in the path
+     * to see if it is inside a grid and updates the value inside of the grid accordingly
+     */
     private void updateGrid() {
         ArrayList<Grid> visited = new ArrayList<Grid>();
         for(LatLng coordinate : pathPoints) {
             for(Grid grid : gameboard.getGrids()) {
+                //If there was already a point in the path that was in this grid then don't update twice
                 if(visited.contains(grid)) {
                     continue;
                 }
-                if(coordinate.latitude > grid.getBottomLeft().latitude && coordinate.latitude < gameboard.getTopLeft().latitude
-                        && coordinate.longitude > grid.getBottomLeft().longitude && coordinate.longitude < gameboard.getBottomRight().longitude) {
-                    //TODO: Fix the User class's team to be enum, maybe move the grid team class outside to its own thing
+                if(coordinate.latitude > grid.getBottomLeft().latitude && coordinate.latitude < grid.getTopLeft().latitude
+                        && coordinate.longitude > grid.getBottomLeft().longitude && coordinate.longitude < grid.getBottomRight().longitude) {
                     if(grid.getTeam() == player.team) {
-                        grid.setValue(grid.getValue() + player.defense);
+                        //If it belongs to the user's team, then add the player's defense to the points value
+                        if(grid.getValue() + player.defense > GRID_MAX_VALUE) {
+                            grid.setValue(GRID_MAX_VALUE);
+                        } else {
+                            grid.setValue(grid.getValue() + player.defense);
+                        }
                     } else {
                         if(grid.getValue() - player.attack > 0) {
+                            //If the player doesn't have enough attack to conquer it, then subtract points but don't change the grid owner
                             grid.setValue(grid.getValue() - player.attack);
                         } else if (grid.getValue() - player.attack == 0) {
+                            //If the player has just enough to make it have 0 points then make it neutral
                             grid.setValue(0);
                             grid.setTeam(Team.NEUTRAL);
                         } else {
+                            //If the player has enough attack to convert it to his team then change the grid owner and set the value as the "overkill" amount
                             grid.setValue(player.attack - grid.getValue());
                             grid.setTeam(player.team);
                         }
@@ -206,6 +212,11 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
+    /**
+     * Calculates the color int of the grid according to how many points it has and which team it belongs to
+     * @param grid
+     * @return
+     */
     private int getGridColor(Grid grid) {
         int red = 0;
         int green = 0;
@@ -223,10 +234,16 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
             case NEUTRAL:
                 return(Color.TRANSPARENT);
         }
+        //Changes the transparency based on how strongly the team holds it
         int alpha = Math.round((255/GRID_MAX_VALUE) * grid.getValue());
         return(Color.argb(alpha, red, green, blue));
     }
 
+    /**
+     * Returns the appropriate color for the border of the grid, the border is always the team's color and is 100% opaque
+     * @param grid
+     * @return
+     */
     private int getBorderColor(Grid grid) {
         int color = 0;
         switch(grid.getTeam()) {
@@ -237,6 +254,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                 color = Color.GREEN;
                 break;
             case BLUE:
+                Log.i(TAG, "Setting color to blue");
                 color = Color.BLUE;
                 break;
             case NEUTRAL:
@@ -278,6 +296,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
         LatLng currentPos = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
 
+        //When initally launching the app, moves the camera to the user's location. We don't want the camera to move whenever you change location
         if(isInitialCameraMove) {
             mMap.moveCamera(CameraUpdateFactory.newLatLng(currentPos));
             mMap.animateCamera(CameraUpdateFactory.zoomTo(20));
@@ -285,6 +304,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
         //If this creates janky paths, then you can move this code into a timer which checks the current position every so often
+        //If the user is currently on a run, then this saves the current location to the path and updates the path line
         if(isTrackingRun) {
             Log.i(TAG, "Adding new point to run path");
             pathPoints.add(currentPos);
