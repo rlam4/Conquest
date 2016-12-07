@@ -1,14 +1,19 @@
 package com.five.conquest;
 
+import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.widget.TextViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import static android.R.style.Animation;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -27,6 +32,8 @@ public class ProfileActivity extends AppCompatActivity {
     Drawable background;
 
     ProgressBar mExpBar;
+
+    android.view.animation.Animation jiggle;
 
     User player;
 
@@ -49,6 +56,8 @@ public class ProfileActivity extends AppCompatActivity {
         mExpBar = (ProgressBar) findViewById(R.id.progressBarExp);
         background = getResources().getDrawable(R.drawable.knight);
 
+        jiggle = AnimationUtils.loadAnimation(this, R.anim.wiggle);
+
         background.setAlpha(20);
     }
 
@@ -56,6 +65,7 @@ public class ProfileActivity extends AppCompatActivity {
     public void onStart() {
         super.onStart();
         player = new User("Player 1");
+        mUsername.setPaintFlags(mUsername.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         player.exp = 50;
 
         updateView();
@@ -102,11 +112,15 @@ public class ProfileActivity extends AppCompatActivity {
         if(player.points > 0) {
             mPoints.setText("Points to allocate: " + player.points);
             mLevelUpAttack.setVisibility(View.VISIBLE);
+            mLevelUpAttack.startAnimation(jiggle);
             mLevelUpDefense.setVisibility(View.VISIBLE);
+            mLevelUpDefense.startAnimation(jiggle);
         } else {
             mPoints.setVisibility(View.INVISIBLE);
             mLevelUpAttack.setVisibility(View.INVISIBLE);
             mLevelUpDefense.setVisibility(View.INVISIBLE);
+            mLevelUpAttack.clearAnimation();
+            mLevelUpDefense.clearAnimation();
         }
     }
 
