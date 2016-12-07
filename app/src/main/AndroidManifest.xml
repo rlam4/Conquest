@@ -44,14 +44,13 @@
         </activity>
         <activity
             android:name=".ProfileActivity"
-            android:label="@string/title_activity_maps" />
+            android:label="Profile" />
         <activity
             android:name=".LoginActivity"
             android:label="@string/title_activity_login" />
         <activity
             android:name=".Chat.SocialActivity"
-            android:label="@string/title_activity_social"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:label="Team Chat - Knights"></activity>
     </application>
 
 </manifest>

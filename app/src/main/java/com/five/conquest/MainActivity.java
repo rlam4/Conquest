@@ -120,6 +120,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                     playButton.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.stop_xml, 0, 0);
                     playButton.setText("Stop");
                     pathOptions = new PolylineOptions();
+                    pathPoints = new ArrayList<LatLng>();
                     path = mMap.addPolyline(pathOptions);
                     startTime = System.currentTimeMillis();
                     attackPointsContributed = 0;
@@ -391,7 +392,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         //When initally launching the app, moves the camera to the user's location. We don't want the camera to move whenever you change location
         if(isInitialCameraMove) {
             mMap.moveCamera(CameraUpdateFactory.newLatLng(currentPos));
-            mMap.animateCamera(CameraUpdateFactory.zoomTo(20));
+            mMap.animateCamera(CameraUpdateFactory.zoomTo(16));
             isInitialCameraMove = false;
         }
 
