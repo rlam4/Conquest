@@ -1,5 +1,6 @@
 package com.five.conquest;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.widget.TextViewCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +15,7 @@ public class ProfileActivity extends AppCompatActivity {
     ImageButton mLevelUpAttack;
     ImageButton mLevelUpDefense;
 
+
     TextView mLevel;
     TextView mEXP;
     TextView mAttack;
@@ -21,6 +23,8 @@ public class ProfileActivity extends AppCompatActivity {
     TextView mPoints;
     TextView mDistance;
     TextView mUsername;
+
+    Drawable background;
 
     ProgressBar mExpBar;
 
@@ -43,6 +47,9 @@ public class ProfileActivity extends AppCompatActivity {
         mUsername = (TextView) findViewById(R.id.textViewUser);
 
         mExpBar = (ProgressBar) findViewById(R.id.progressBarExp);
+        background = getResources().getDrawable(R.drawable.knight);
+
+        background.setAlpha(20);
     }
 
     @Override

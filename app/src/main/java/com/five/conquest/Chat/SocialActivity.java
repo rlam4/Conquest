@@ -1,5 +1,6 @@
 package com.five.conquest.Chat;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -33,6 +34,7 @@ public class SocialActivity extends AppCompatActivity {
     private ArrayList<Message> chatMessages;
     private ImageView chatView;
     private ChatList chatList;
+    private Drawable background;
 
     private EditText.OnKeyListener keyListener = new View.OnKeyListener() {
         @Override
@@ -107,11 +109,14 @@ public class SocialActivity extends AppCompatActivity {
         listView = (ListView) findViewById(R.id.chat_list_view);
         editText = (EditText) findViewById(R.id.chat_edit_text1);
         chatView = (ImageView) findViewById(R.id.enter_chat1);
+        background = getResources().getDrawable(R.drawable.knight);
+
         chatList = new ChatList(chatMessages, this);
         listView.setAdapter(chatList);
         editText.setOnKeyListener(keyListener);
         chatView.setOnClickListener(clickListener);
         editText.addTextChangedListener(watcher);
+        background.setAlpha(20);
     }
 
     private void sendMessage(final String msg)
