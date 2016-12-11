@@ -51,15 +51,16 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     public static final long UPDATE_INTERVAL = 1000;
     public static final long FASTEST_UPDATE_INTERVAL = UPDATE_INTERVAL/2;
     protected static int PERMISSION_REQUEST_FINE_LOCATION = 1;
+    protected static int SETTINGS_REQUEST_CODE = 1;
 
     protected GoogleApiClient googleApiClient;
     protected LocationRequest locationRequest;
     protected Location currentLocation;
 
-    protected GameBoard gameboard;
+    private GameBoard gameboard;
 
-    protected Boolean isInitialCameraMove = true;
-    protected Boolean isTrackingRun = false;
+    private Boolean isInitialCameraMove = true;
+    private Boolean isTrackingRun = false;
 
     private ArrayList<Polygon> mapGrid;
     private ArrayList<LatLng> pathPoints;
@@ -77,6 +78,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
     //TODO: Replace this default user with actual player settings
     private User player;
+    private Settings settings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,7 +89,9 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         player = new User("Default");
         player.attack = 20;
         player.defense = 20;
-        player.team = Team.BLUE;
+        player.team = Team.RED;
+
+        settings = new Settings();
 
         gameboard = new GameBoard();
         checkGPSPermission();
@@ -154,7 +158,9 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
             public void onClick(View v) {
                 Log.i(TAG, "Chat button clicked");
                 Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
-                startActivity(intent);
+                intent.putExtra("settings", settings);
+                startActivityForResult(intent, SETTINGS_REQUEST_CODE);
+                //startActivity(intent);
             }
         });
     }
@@ -290,6 +296,9 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         switch(grid.getTeam()) {
             case RED:
                 red = 255;
+                if(settings.getColorblind()) {
+                    green = 255;
+                }
                 break;
             case GREEN:
                 green = 255;
@@ -314,13 +323,16 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         int color = 0;
         switch(grid.getTeam()) {
             case RED:
-                color = Color.RED;
+                if(settings.getColorblind()) {
+                    color = Color.YELLOW;
+                } else {
+                    color = Color.RED;
+                }
                 break;
             case GREEN:
                 color = Color.GREEN;
                 break;
             case BLUE:
-                Log.i(TAG, "Setting color to blue");
                 color = Color.BLUE;
                 break;
             case NEUTRAL:
@@ -334,24 +346,36 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
      */
     private void showPostRunAnalysis() {
         //TODO: Change distance and pace programatically based on user's options of miles or kilometers
-        float distanceInMeters = 0;
+        //Distance is in meters initially
+        double distance = 0;
         for(int i = 1; i < pathPoints.size(); i++) {
             float[] results = new float[3];
             LatLng start = pathPoints.get(i-1);
             LatLng stop = pathPoints.get(i);
             Location.distanceBetween(start.latitude, start.longitude, stop.latitude, stop.longitude, results);
-            distanceInMeters += results[0];
+            distance += results[0];
         }
-        double distanceInMiles = distanceInMeters/1609.34;
+
+        //Convert to miles if needed
+        if(!settings.getKilometers()) {
+            distance = distance/1609.34;
+        } else {
+            distance = distance/1000;
+        }
 
         long[] readableTime = new long[3];
         long timeElapsedInMillis = stopTime - startTime;
         convertTimeToReadable(timeElapsedInMillis, readableTime);
 
-        double pace = (timeElapsedInMillis/distanceInMiles)/60000;
+        double pace = (timeElapsedInMillis/distance)/60000;
 
         StringBuilder dialogMessage = new StringBuilder();
-        dialogMessage.append("Distance: " + (Math.floor(distanceInMiles * 100) / 100) + " miles\n") ;
+        dialogMessage.append("Distance: " + (Math.floor(distance * 100) / 100)) ;
+        if(settings.getKilometers()) {
+            dialogMessage.append(" kilometers\n");
+        } else {
+            dialogMessage.append(" miles\n");
+        }
         dialogMessage.append("Time: ");
         if(readableTime[0] < 10) {
             dialogMessage.append("0");
@@ -365,7 +389,12 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
             dialogMessage.append("0");
         }
         dialogMessage.append(readableTime[2] + "\n");
-        dialogMessage.append("Pace: " + (Math.floor(pace * 100) / 100) + " min/mile\n\n");
+        dialogMessage.append("Pace: " + (Math.floor(pace * 100) / 100));
+        if(settings.getKilometers()) {
+            dialogMessage.append(" min/kilometer\n\n");
+        } else {
+            dialogMessage.append(" min/mile\n\n");
+        }
         dialogMessage.append("Attack Points Contributed: " + attackPointsContributed + "\n");
         dialogMessage.append("Defense Points Contributed: " + defensePointsContributed + "\n");
         dialogMessage.append("EXP Gained: " + (attackPointsContributed + defensePointsContributed) + "\n");
@@ -413,6 +442,22 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     protected synchronized void buildGoogleApiClient() {
         googleApiClient = new GoogleApiClient.Builder(this).addConnectionCallbacks(this).addOnConnectionFailedListener(this).addApi(LocationServices.API).build();
         googleApiClient.connect();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        //Changes settings when you return from the settings activity
+        if(requestCode == SETTINGS_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
+            Settings newSettings = (Settings) data.getSerializableExtra("new settings");
+            //If colorblind settings were changed, then redraw the gameboard
+            if(newSettings.getColorblind() != settings.getColorblind()) {
+                settings = newSettings;
+                mMap.clear();
+                drawGameBoard();
+            } else {
+              settings = newSettings;
+            }
+        }
     }
 
     @Override

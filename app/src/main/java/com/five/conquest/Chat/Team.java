@@ -11,16 +11,16 @@ public enum Team {
         String result = "";
         switch(this) {
             case RED:
-                result = "Red";
+                result = "Pirates";
                 break;
             case GREEN:
-                result = "Green";
+                result = "Ninjas";
                 break;
             case BLUE:
-                result = "Blue";
+                result = "Knights";
                 break;
             case NEUTRAL:
-                result = "Neutral";
+                result = "Unconquered";
                 break;
         }
         return result;

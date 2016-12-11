@@ -28,7 +28,7 @@
         android:checked="false"
         android:layout_marginTop="11dp"
         android:textColorLink="?attr/actionModeSplitBackground"
-        app:buttonTint="@color/cast_intro_overlay_button_background_color"
+        android:buttonTint="@color/cast_intro_overlay_button_background_color"
         android:allowUndo="true"
         android:layout_below="@+id/textView"
         android:layout_toEndOf="@+id/radioMilesButton"
@@ -41,7 +41,7 @@
         android:id="@+id/radioMilesButton"
         android:checked="true"
         android:textColorLink="?attr/actionModeSplitBackground"
-        app:buttonTint="@color/cast_intro_overlay_button_background_color"
+        android:buttonTint="@color/cast_intro_overlay_button_background_color"
         android:allowUndo="true"
         android:layout_alignBaseline="@+id/radioButtonKm"
         android:layout_alignBottom="@+id/radioButtonKm"
@@ -59,7 +59,6 @@
         android:layout_alignParentStart="true" />
 
     <Switch
-        android:text="                                       "
         android:layout_width="wrap_content"
         android:id="@+id/switchCbMode"
         android:splitTrack="false"
