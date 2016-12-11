@@ -28,13 +28,17 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
@@ -189,8 +193,32 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
             gridOptions.strokeColor(getBorderColor(grid));
             gridOptions.fillColor(getGridColor(grid));
             Polygon gridDrawing = mMap.addPolygon(gridOptions);
+            gridDrawing.setClickable(true);
             mapGrid.add(gridDrawing);
         }
+
+        //Sets a click listener for the polygons on the map grid so that you can click a grid to see which team owns it and how many points they have
+        mMap.setOnPolygonClickListener(new GoogleMap.OnPolygonClickListener() {
+            @Override
+            public void onPolygonClick(Polygon polygon) {
+                //Find the corresponding Grid object
+                double centralLat = (polygon.getPoints().get(0).latitude + polygon.getPoints().get(3).latitude)/2;
+                double centralLon = (polygon.getPoints().get(0).longitude + polygon.getPoints().get(1).longitude)/2;
+                for(Grid grid : gameboard.getGrids()) {
+                    if(centralLat > grid.getBottomLeft().latitude && centralLat < grid.getTopLeft().latitude
+                            && centralLon > grid.getBottomLeft().longitude && centralLon < grid.getBottomRight().longitude) {
+                        //Add an invisible marker so that you can show an info window on the map
+                        MarkerOptions gridInfoOptions = new MarkerOptions();
+                        gridInfoOptions.position(new LatLng(centralLat, centralLon));
+                        gridInfoOptions.title(grid.getTeam().toString());
+                        gridInfoOptions.snippet("Points: " + grid.getValue());
+                        gridInfoOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.transparent_background));
+                        Marker newMarker = mMap.addMarker(gridInfoOptions);
+                        newMarker.showInfoWindow();
+                    }
+                }
+            }
+        });
     }
 
     /**
