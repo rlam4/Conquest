@@ -47,17 +47,6 @@
         android:layout_marginTop="20dp" />
 
     <TextView
-        android:text="Defense:"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textViewDefense"
-        android:textSize="18sp"
-        android:layout_alignBaseline="@+id/textViewDefensePoints"
-        android:layout_alignBottom="@+id/textViewDefensePoints"
-        android:layout_alignStart="@+id/textViewPoints"
-        android:textAllCaps="true" />
-
-    <TextView
         android:text="0"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -118,17 +107,6 @@
         android:layout_centerHorizontal="true" />
 
     <TextView
-        android:text="Attributes"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textViewAttributes"
-        android:textSize="20sp"
-        android:textStyle="normal|bold"
-        android:textAllCaps="false"
-        android:layout_above="@+id/textViewAttackPoints"
-        android:layout_centerHorizontal="true" />
-
-    <TextView
         android:text="Level 100"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -139,14 +117,38 @@
         android:layout_alignStart="@+id/textViewDistance" />
 
     <TextView
+        android:text="Attributes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textViewAttributes"
+        android:textSize="20sp"
+        android:textStyle="normal|bold"
+        android:textAllCaps="false"
+        android:layout_above="@+id/imageButtonAttack"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="7dp" />
+
+    <TextView
         android:text="Attack:"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/textViewAttack"
         android:textSize="18sp"
-        android:layout_marginTop="56dp"
+        android:layout_marginTop="55dp"
         android:textAllCaps="true"
         android:layout_below="@+id/progressBarExp"
-        android:layout_alignStart="@+id/textViewDefense" />
+        android:layout_toStartOf="@+id/textViewExp"
+        android:layout_marginEnd="8dp" />
+
+    <TextView
+        android:text="Defense:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textViewDefense"
+        android:textSize="18sp"
+        android:textAllCaps="true"
+        android:layout_alignBaseline="@+id/textViewDefensePoints"
+        android:layout_alignBottom="@+id/textViewDefensePoints"
+        android:layout_toStartOf="@+id/textViewExp" />
 
 </RelativeLayout>

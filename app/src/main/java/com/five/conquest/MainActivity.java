@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.five.conquest.Chat.SocialActivity;
@@ -367,8 +368,9 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         dialogMessage.append("Pace: " + (Math.floor(pace * 100) / 100) + " min/mile\n\n");
         dialogMessage.append("Attack Points Contributed: " + attackPointsContributed + "\n");
         dialogMessage.append("Defense Points Contributed: " + defensePointsContributed + "\n");
-        //TODO: Uncomment when exp is implemented
-        //dialogMessage.append("EXP Gained: " + (attackPointsContributed + defensePointsContributed) + "\n");
+        dialogMessage.append("EXP Gained: " + (attackPointsContributed + defensePointsContributed) + "\n");
+
+        //TODO: Update user with the information accordingly.
 
         final AlertDialog.Builder runAnalysis = new AlertDialog.Builder(this);
         runAnalysis.setTitle("Post-Run Analysis");
@@ -379,6 +381,11 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
         runAnalysis.show();
+
+        //Updates arrow depending if user has any points to spend.
+        if(player.points > 0) {
+        }
+
     }
 
     /**

@@ -21,16 +21,59 @@
         android:layout_alignParentStart="true" />
 
     <RadioButton
+        android:text="Kilometers"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/radioButtonKm"
+        android:checked="false"
+        android:layout_marginTop="11dp"
+        android:textColorLink="?attr/actionModeSplitBackground"
+        app:buttonTint="@color/cast_intro_overlay_button_background_color"
+        android:allowUndo="true"
+        android:layout_below="@+id/textView"
+        android:layout_toEndOf="@+id/radioMilesButton"
+        android:layout_marginStart="19dp" />
+
+    <RadioButton
         android:text="Miles"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/radioMilesButton"
         android:checked="true"
-        android:layout_marginTop="18dp"
-        android:layout_below="@+id/textView"
-        android:layout_alignParentStart="true"
         android:textColorLink="?attr/actionModeSplitBackground"
         app:buttonTint="@color/cast_intro_overlay_button_background_color"
-        android:allowUndo="true" />
+        android:allowUndo="true"
+        android:layout_alignBaseline="@+id/radioButtonKm"
+        android:layout_alignBottom="@+id/radioButtonKm"
+        android:layout_alignParentStart="true"
+        android:textCursorDrawable="@color/cast_intro_overlay_button_background_color" />
+
+    <TextView
+        android:text="Colorblind Mode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView2"
+        android:textAppearance="@android:style/TextAppearance.Material.Large"
+        android:layout_marginTop="38dp"
+        android:layout_below="@+id/radioButtonKm"
+        android:layout_alignParentStart="true" />
+
+    <Switch
+        android:text="                                       "
+        android:layout_width="wrap_content"
+        android:id="@+id/switchCbMode"
+        android:splitTrack="false"
+        android:hapticFeedbackEnabled="true"
+        android:fontFamily="sans-serif-medium"
+        android:autoText="false"
+        android:allowUndo="true"
+        android:layout_centerInParent="false"
+        android:singleLine="false"
+        android:textColorLink="@color/cast_intro_overlay_button_background_color"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/textView2"
+        android:layout_alignBottom="@+id/textView2"
+        android:layout_toEndOf="@+id/radioButtonKm"
+        android:layout_marginStart="28dp" />
 
 </RelativeLayout>

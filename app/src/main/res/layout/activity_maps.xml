@@ -86,5 +86,13 @@
         android:layout_toEndOf="@+id/playButton"
         android:layout_marginStart="15dp" />
 
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/arrow_up_white"
+        android:id="@+id/imageViewLevel"
+        android:layout_alignTop="@+id/toolbar2"
+        android:layout_toStartOf="@+id/playButton" />
+
 
 </RelativeLayout>
