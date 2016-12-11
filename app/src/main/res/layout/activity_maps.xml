@@ -82,17 +82,20 @@
         tools:drawableTop="@drawable/chat_xml"
         android:drawableTop="@drawable/chat_xml"
         android:textColor="@color/cast_expanded_controller_text_color"
+        android:layout_marginStart="15dp"
         android:layout_alignParentBottom="true"
-        android:layout_toEndOf="@+id/playButton"
-        android:layout_marginStart="15dp" />
+        android:layout_toEndOf="@+id/playButton" />
 
-    <ImageView
+    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:srcCompat="@drawable/arrow_up_white"
-        android:id="@+id/imageViewLevel"
+        android:layout_marginStart="24dp"
+        android:id="@+id/button4"
+        android:drawableTop="@drawable/arrow_up_white"
+        android:background="@null"
+        android:clickable="false"
         android:layout_alignTop="@+id/toolbar2"
-        android:layout_toStartOf="@+id/playButton" />
+        android:layout_alignParentStart="true" />
 
 
 </RelativeLayout>

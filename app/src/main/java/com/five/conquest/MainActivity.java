@@ -13,6 +13,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -74,6 +75,9 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     private Button playButton;
     private Button chatButton;
     private Button settingsButton;
+    private Button levelButton; //Dummy button to place an image.
+
+    android.view.animation.Animation jiggle;
 
     //TODO: Replace this default user with actual player settings
     private User player;
@@ -97,6 +101,8 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+
+        //Button declarations
         profileButton = (Button) findViewById(R.id.profileButton);
         profileButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -157,6 +163,19 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                 startActivity(intent);
             }
         });
+
+        //This is not really a button
+        jiggle = AnimationUtils.loadAnimation(this, R.anim.jump);
+
+        levelButton = (Button) findViewById(R.id.button4);
+        if(player.points > 0) {
+            levelButton.setVisibility(View.VISIBLE);
+            levelButton.setAnimation(jiggle);
+        } else {
+            levelButton.setVisibility(View.INVISIBLE);
+        }
+
+
     }
 
     @Override
