@@ -50,7 +50,8 @@
             android:label="@string/title_activity_login" />
         <activity
             android:name=".Chat.SocialActivity"
-            android:label="Team Chat - Knights"></activity>
+            android:label="Team Chat - Knights" />
+        <activity android:name=".SettingsActivity"></activity>
     </application>
 
 </manifest>

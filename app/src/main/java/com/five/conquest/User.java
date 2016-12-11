@@ -11,7 +11,7 @@ public class User {
     Integer attack;
     Integer defense;
     Integer points; //Points to allocate
-    Double distance; //Will be measured in miles
+    Double distance; //Will be measured in miles, can change to kilometers, make a function to do that.
 
     String username;
     String password; //Not yet used, should not be here for security measures.
