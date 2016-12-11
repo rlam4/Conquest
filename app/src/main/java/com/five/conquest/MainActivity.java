@@ -68,6 +68,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     private Button profileButton;
     private Button playButton;
     private Button chatButton;
+    private Button settingsButton;
 
     //TODO: Replace this default user with actual player settings
     private User player;
@@ -139,6 +140,16 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                     drawGameBoard();
                     showPostRunAnalysis();
                 }
+            }
+        });
+
+        settingsButton = (Button) findViewById(R.id.settingsButton);
+        settingsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(TAG, "Chat button clicked");
+                Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+                startActivity(intent);
             }
         });
     }
