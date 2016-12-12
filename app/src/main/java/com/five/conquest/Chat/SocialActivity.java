@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.five.conquest.MainActivity;
 import com.five.conquest.R;
@@ -117,6 +118,16 @@ public class SocialActivity extends AppCompatActivity {
         chatView.setOnClickListener(clickListener);
         editText.addTextChangedListener(watcher);
         background.setAlpha(20);
+
+        Bundle b = getIntent().getExtras();
+
+        if(b != null) {
+            Toast toast2 = Toast.makeText(getApplicationContext(), "Hello toast!", Toast.LENGTH_SHORT);
+            toast2.show();
+            sendMessage(b.getString("loc"));
+        }
+
+
     }
 
     private void sendMessage(final String msg)

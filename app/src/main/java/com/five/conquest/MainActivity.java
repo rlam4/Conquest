@@ -1,11 +1,18 @@
 package com.five.conquest;
 
 import android.Manifest;
+import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.location.Location;
+import android.net.Uri;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
@@ -58,10 +65,10 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     protected LocationRequest locationRequest;
     protected Location currentLocation;
 
-    private GameBoard gameboard;
+    protected GameBoard gameboard;
 
-    private Boolean isInitialCameraMove = true;
-    private Boolean isTrackingRun = false;
+    protected Boolean isInitialCameraMove = true;
+    protected Boolean isTrackingRun = false;
 
     private ArrayList<Polygon> mapGrid;
     private ArrayList<LatLng> pathPoints;
@@ -79,6 +86,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     private Button levelButton; //Dummy button to place an image.
 
     android.view.animation.Animation jiggle;
+    private Button sosButton;
 
     //TODO: Replace this default user with actual player settings
     private User player;
@@ -93,9 +101,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         player = new User("Default");
         player.attack = 20;
         player.defense = 20;
-        player.team = Team.RED;
-
-        settings = new Settings();
+        player.team = Team.BLUE;
 
         gameboard = new GameBoard();
         checkGPSPermission();
@@ -104,7 +110,6 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
 
         //Button declarations
         profileButton = (Button) findViewById(R.id.profileButton);
@@ -126,6 +131,21 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                 startActivity(intent);
             }
         });
+
+        sosButton = (Button) findViewById(R.id.sosButton);
+        sosButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(TAG, "SOS button clicked");
+                Intent intent = new Intent(MainActivity.this, SocialActivity.class);
+                Bundle b = new Bundle();
+                b.putString("loc", "maps.google.com?q=" + currentLocation.getLatitude() + "," + currentLocation.getLongitude()); //Your id
+                intent.putExtras(b);
+                startActivity(intent);
+            }
+        });
+
+
 
         playButton = (Button) findViewById(R.id.playButton);
         playButton.setOnClickListener(new View.OnClickListener() {
@@ -191,6 +211,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
         //Draws the grids of the gameboard over the map
         drawGameBoard();
+
 
         //Checks if you have location permission, then starts the location updates
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -352,6 +373,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                 color = Color.GREEN;
                 break;
             case BLUE:
+                Log.i(TAG, "Setting color to blue");
                 color = Color.BLUE;
                 break;
             case NEUTRAL:
