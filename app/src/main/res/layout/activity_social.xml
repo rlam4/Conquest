@@ -1,46 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<com.five.conquest.Chat.SizeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    tools:context="com.five.conquest.SocialActivity">
+    android:id="@+id/chat_layout"
+    android:paddingTop="16dp"
+    android:background="@drawable/knight"
+    tools:context=".MainActivity">
 
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/app_bar"
+
+    <LinearLayout
+        android:id="@+id/bottomlayout"
+        android:background="@android:color/white"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/app_bar_height"
-        android:fitsSystemWindows="true"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:layout_alignParentBottom="true"
+        android:layout_height="wrap_content">
 
-        <android.support.design.widget.CollapsingToolbarLayout
-            android:id="@+id/toolbar_layout"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fitsSystemWindows="true"
-            app:contentScrim="?attr/colorPrimary"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+            android:layout_height="wrap_content">
 
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
+            <EditText
+                android:layout_marginBottom="8dp"
+                android:id="@+id/chat_edit_text1"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                app:layout_collapseMode="pin"
-                app:popupTheme="@style/AppTheme.PopupOverlay" />
+                android:layout_height="wrap_content"
+                android:scrollHorizontally="false"
+                android:layout_toLeftOf="@+id/enter_chat1"
+                android:layout_toStartOf="@+id/enter_chat1"
+                android:hint="Enter Message"
+                android:maxLines="4"
+                android:inputType="textCapSentences"
+                android:backgroundTint="@android:color/holo_blue_dark"
 
-        </android.support.design.widget.CollapsingToolbarLayout>
-    </android.support.design.widget.AppBarLayout>
+                android:textSize="18sp"
+                android:paddingLeft="4dp"
+                android:layout_alignParentTop="true"
+                android:textColorLink="?android:attr/colorPrimary"
+                android:textCursorDrawable="@null" />
 
-    <include layout="@layout/content_social" />
+            <ImageView android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:id="@+id/enter_chat1"
+                android:layout_width="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/chat_edit_text1"
+                android:paddingLeft="13dp"
+                android:paddingStart="13dp"
+                android:paddingRight="17dp"
+                android:paddingEnd="17dp"
+                android:src="@drawable/ic_chat_send" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/fab_margin"
-        app:layout_anchor="@id/app_bar"
-        app:layout_anchorGravity="bottom|end"
-        app:srcCompat="@android:drawable/ic_dialog_email" />
+        </RelativeLayout>
+    </LinearLayout>
 
-</android.support.design.widget.CoordinatorLayout>
+    <ListView
+        android:id="@+id/chat_list_view"
+        android:paddingRight="16dp"
+        android:paddingLeft="16dp"
+        android:divider="@drawable/chat_divider"
+        android:layout_width="match_parent"
+        android:scrollbarStyle="outsideOverlay"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/bottomlayout"></ListView>
+
+</com.five.conquest.Chat.SizeLayout>

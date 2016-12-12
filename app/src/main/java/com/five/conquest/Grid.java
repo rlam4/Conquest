@@ -1,5 +1,6 @@
 package com.five.conquest;
 
+import com.five.conquest.Chat.Team;
 import com.google.android.gms.maps.model.LatLng;
 
 
@@ -16,8 +17,6 @@ public class Grid{
     private LatLng _topRight;
     private LatLng _btmLeft;
     private LatLng _btmRight;
-
-    // enum for who owns the grid
 
     private Team _owner;
 
@@ -59,6 +58,6 @@ public class Grid{
         _value = value;
     }
 
-    public void setTeam(Team team) {_owner = team; }
+    public void setTeam (Team team) {_owner = team; }
 
 }

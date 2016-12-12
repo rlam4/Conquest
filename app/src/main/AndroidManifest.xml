@@ -13,6 +13,8 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -35,7 +37,7 @@
 
         <activity
             android:name=".MainActivity"
-            android:label="@string/title_activity_maps">
+            android:label="Conquest">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -44,14 +46,16 @@
         </activity>
         <activity
             android:name=".ProfileActivity"
-            android:label="@string/title_activity_maps" />
+            android:label="Profile" />
         <activity
             android:name=".LoginActivity"
             android:label="@string/title_activity_login" />
         <activity
-            android:name=".SocialActivity"
-            android:label="@string/title_activity_social"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:name=".Chat.SocialActivity"
+            android:label="Team Chat - Knights" />
+        <activity
+            android:name=".SettingsActivity"
+            android:label="Settings"></activity>
     </application>
 
 </manifest>

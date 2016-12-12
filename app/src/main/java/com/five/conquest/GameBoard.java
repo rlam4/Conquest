@@ -19,8 +19,8 @@ import static android.content.ContentValues.TAG;
 public class GameBoard {
 
     // defines the coordinates for the grid around College Park, MD
-    private LatLng _topLeft = new LatLng(39.000209, -76.950282);
-    private LatLng _topRight = new LatLng(39.000209, -76.93504);
+    private LatLng _topLeft = new LatLng(38.995832, -76.950282);
+    private LatLng _topRight = new LatLng(38.995832, -76.93504);
     private LatLng _btmLeft = new LatLng(38.980590, -76.950282);
     private LatLng _btmRight = new LatLng(38.980590, -76.93504);
 
@@ -38,8 +38,8 @@ public class GameBoard {
         double lonStep = getLonStep();
 
         // iterates over the gameBoard and instantiates all of the grids starting from the top left
-        for(double lat = _btmLeft.latitude; lat < (_topLeft.latitude-latStep); lat += latStep) {
-            for (double lon = _topLeft.longitude; lon < (_topRight.longitude-lonStep); lon += lonStep) {
+        for(double lat = _btmLeft.latitude; lat < (_topLeft.latitude-latStep+0.00001 ); lat += latStep) {
+            for (double lon = _topLeft.longitude; lon < (_topRight.longitude-lonStep+0.00001); lon += lonStep) {
                 // instantiates all of the corners for the new Grid as new LatLng coordinate pairs
                 tl = new LatLng(lat + latStep, lon);
                 tr = new LatLng(lat + latStep, lon + lonStep);
