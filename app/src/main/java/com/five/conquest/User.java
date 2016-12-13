@@ -2,9 +2,10 @@ package com.five.conquest;
 
 import com.five.conquest.Chat.Team;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class User {
+public class User implements Serializable{
 
     Integer level;
     Integer exp;
@@ -27,13 +28,13 @@ public class User {
         this.username = username;
 
         //Set the stats
-        level = 2;
+        level = 1;
         exp = 0;
-        attack = 0;
-        defense = 0;
-        points = 1;
+        attack = 10;
+        defense = 10;
+        points = 0;
 
-        distance = 1.0;
+        distance = 0.0;
 
     }
 }

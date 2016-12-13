@@ -3,20 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/knight">
+    android:background="@drawable/knight"><![CDATA[
     tools:context="com.five.conquest.ProfileActivity">
 
 
-    <TextView
-        android:text="0"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textViewAttackPoints"
-        android:layout_marginEnd="14dp"
-        android:layout_above="@+id/textViewDefensePoints"
-        android:layout_alignEnd="@+id/textViewPoints"
-        android:textSize="18sp"
-        android:layout_alignStart="@+id/textViewDefensePoints" />
+    ]]>
 
     <TextView
         android:text="Points to Allocate: 0"
@@ -28,15 +19,6 @@
         android:layout_centerHorizontal="true"
         android:textSize="18sp" />
 
-    <TextView
-        android:text="EXP: 100/100"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textViewExp"
-        android:textSize="18sp"
-        android:layout_below="@+id/textViewUser"
-        android:layout_alignEnd="@+id/textViewDistance" />
-
     <ImageView
         android:layout_width="250dp"
         android:layout_height="250dp"
@@ -47,16 +29,6 @@
         android:layout_marginTop="20dp" />
 
     <TextView
-        android:text="0"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
-        android:id="@+id/textViewDefensePoints"
-        android:textSize="18sp"
-        android:layout_below="@+id/textViewAttack"
-        android:layout_alignEnd="@+id/textViewUser" />
-
-    <TextView
         android:text="Username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -65,26 +37,6 @@
         android:textStyle="normal|bold"
         android:layout_below="@+id/imageView3"
         android:layout_centerHorizontal="true" />
-
-    <ImageButton
-        android:layout_height="36dp"
-        app:srcCompat="@drawable/arrow_up"
-        android:id="@+id/imageButtonDefense"
-        android:background="?attr/selectableItemBackground"
-        android:layout_width="36dp"
-        android:layout_marginTop="16dp"
-        android:layout_below="@+id/textViewAttackPoints"
-        android:layout_alignStart="@+id/imageButtonAttack" />
-
-    <ImageButton
-        android:layout_width="36dp"
-        app:srcCompat="@drawable/arrow_up"
-        android:id="@+id/imageButtonAttack"
-        android:layout_height="36dp"
-        android:background="?attr/selectableItemBackground"
-        android:layout_above="@+id/textViewDefense"
-        android:layout_alignEnd="@+id/progressBarExp"
-        android:layout_marginBottom="17dp" />
 
     <TextView
         android:text="Distance Traveled: 1000 Miles"
@@ -107,14 +59,55 @@
         android:layout_centerHorizontal="true" />
 
     <TextView
-        android:text="Level 100"
+        android:text="Defense:"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/textViewLevel"
+        android:id="@+id/textViewDefense"
         android:textSize="18sp"
         android:textAllCaps="true"
-        android:layout_below="@+id/textViewUser"
-        android:layout_alignStart="@+id/textViewDistance" />
+        android:layout_alignBaseline="@+id/textViewDefensePoints"
+        android:layout_alignBottom="@+id/textViewDefensePoints"
+        android:layout_alignEnd="@+id/textViewAttack" />
+
+    <ImageButton
+        android:layout_width="36dp"
+        app:srcCompat="@drawable/arrow_up"
+        android:id="@+id/imageButtonAttack"
+        android:layout_height="36dp"
+        android:background="?attr/selectableItemBackground"
+        android:layout_alignBottom="@+id/textViewAttackPoints"
+        android:layout_toEndOf="@+id/progressBarExp" />
+
+    <ImageButton
+        android:layout_height="36dp"
+        app:srcCompat="@drawable/arrow_up"
+        android:id="@+id/imageButtonDefense"
+        android:background="?attr/selectableItemBackground"
+        android:layout_width="36dp"
+        android:layout_marginTop="17dp"
+        android:layout_below="@+id/textViewAttack"
+        android:layout_alignStart="@+id/imageButtonAttack" />
+
+    <TextView
+        android:text="0"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textViewDefensePoints"
+        android:textSize="18sp"
+        android:layout_above="@+id/textViewPoints"
+        android:layout_alignStart="@+id/textViewAttackPoints"
+        android:layout_marginBottom="6dp" />
+
+    <TextView
+        android:text="Attack:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textViewAttack"
+        android:textSize="18sp"
+        android:layout_marginTop="60dp"
+        android:textAllCaps="true"
+        android:layout_below="@+id/progressBarExp"
+        android:layout_toStartOf="@+id/textViewExp" />
 
     <TextView
         android:text="Attributes"
@@ -124,31 +117,38 @@
         android:textSize="20sp"
         android:textStyle="normal|bold"
         android:textAllCaps="false"
-        android:layout_above="@+id/imageButtonAttack"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="7dp" />
+        android:layout_above="@+id/textViewAttackPoints"
+        android:layout_toStartOf="@+id/textViewAttackPoints"
+        android:layout_marginBottom="8dp" />
 
     <TextView
-        android:text="Attack:"
+        android:text="0"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/textViewAttack"
+        android:id="@+id/textViewAttackPoints"
         android:textSize="18sp"
-        android:layout_marginTop="55dp"
-        android:textAllCaps="true"
-        android:layout_below="@+id/progressBarExp"
-        android:layout_toStartOf="@+id/textViewExp"
-        android:layout_marginEnd="8dp" />
+        android:layout_alignBaseline="@+id/textViewAttack"
+        android:layout_alignBottom="@+id/textViewAttack"
+        android:layout_toEndOf="@+id/textViewUser" />
 
     <TextView
-        android:text="Defense:"
+        android:text="Level 100"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/textViewDefense"
+        android:id="@+id/textViewLevel"
         android:textSize="18sp"
         android:textAllCaps="true"
-        android:layout_alignBaseline="@+id/textViewDefensePoints"
-        android:layout_alignBottom="@+id/textViewDefensePoints"
-        android:layout_toStartOf="@+id/textViewExp" />
+        android:layout_below="@+id/textViewUser"
+        android:layout_alignStart="@+id/textViewDistance"
+        android:layout_marginTop="11dp" />
+
+    <TextView
+        android:text="EXP: 100/100"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textViewExp"
+        android:textSize="18sp"
+        android:layout_above="@+id/textViewDistance"
+        android:layout_alignEnd="@+id/textViewDistance" />
 
 </RelativeLayout>
