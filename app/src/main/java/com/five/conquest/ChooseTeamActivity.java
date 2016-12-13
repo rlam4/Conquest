@@ -18,7 +18,7 @@ public class ChooseTeamActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_team);
 
-        background = getResources().getDrawable(R.drawable.conquest_touch_icon);
+        background = getResources().getDrawable(R.drawable.compass_cropped);
         background.setAlpha(90);
 
         getSupportActionBar().hide();
