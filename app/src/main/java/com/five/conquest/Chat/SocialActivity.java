@@ -122,8 +122,6 @@ public class SocialActivity extends AppCompatActivity {
         Bundle b = getIntent().getExtras();
 
         if(b != null) {
-            Toast toast2 = Toast.makeText(getApplicationContext(), "Hello toast!", Toast.LENGTH_SHORT);
-            toast2.show();
             sendMessage(b.getString("loc"));
         }
 
