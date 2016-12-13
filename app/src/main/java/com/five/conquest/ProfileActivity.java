@@ -1,10 +1,12 @@
 package com.five.conquest;
 
+import android.content.Intent;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.widget.TextViewCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -12,6 +14,8 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.google.android.gms.games.Player;
 
 import static android.R.style.Animation;
 
@@ -42,6 +46,8 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
+
+
         mLevelUpAttack = (ImageButton) findViewById(R.id.imageButtonAttack);
         mLevelUpDefense = (ImageButton) findViewById(R.id.imageButtonDefense);
 
@@ -58,15 +64,17 @@ public class ProfileActivity extends AppCompatActivity {
 
         jiggle = AnimationUtils.loadAnimation(this, R.anim.wiggle);
 
+        player = (User) getIntent().getSerializableExtra("player");
+
         background.setAlpha(20);
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        player = new User("Player 1");
+//        player = new User("Player 1");
+
         mUsername.setPaintFlags(mUsername.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-        player.exp = 50;
 
         updateView();
 
@@ -76,7 +84,6 @@ public class ProfileActivity extends AppCompatActivity {
                 player.attack++;
                 player.points--;
 
-                //TODO: Add a dialog asking if the user wants to add the point
                 updateView();
 
             }
@@ -88,7 +95,6 @@ public class ProfileActivity extends AppCompatActivity {
                 player.defense++;
                 player.points--;
 
-                //TODO: Add a dialog asking if the user wants to add the point
                 updateView();
 
             }
@@ -122,6 +128,16 @@ public class ProfileActivity extends AppCompatActivity {
             mLevelUpAttack.clearAnimation();
             mLevelUpDefense.clearAnimation();
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        Log.i("CONQUEST", "Back button pressed, returning intent with settings");
+        User newPlayer = player;
+        Intent output = new Intent();
+        output.putExtra("new player", newPlayer);
+        setResult(RESULT_OK, output);
+        finish();
     }
 
 

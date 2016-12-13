@@ -60,6 +60,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     public static final long FASTEST_UPDATE_INTERVAL = UPDATE_INTERVAL/2;
     protected static int PERMISSION_REQUEST_FINE_LOCATION = 1;
     protected static int SETTINGS_REQUEST_CODE = 1;
+    protected static int USER_REQUEST_CODE = 2;
 
     protected GoogleApiClient googleApiClient;
     protected LocationRequest locationRequest;
@@ -99,10 +100,11 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         setContentView(R.layout.activity_maps);
 
         //TODO: Replace this default user
-        player = new User("Default");
-        player.attack = 20;
-        player.defense = 20;
+        player = new User("Player 1");
+        player.exp = 99;
         player.team = Team.BLUE;
+
+        settings = new Settings();
 
         gameboard = new GameBoard();
         checkGPSPermission();
@@ -112,6 +114,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+
         //Button declarations
         profileButton = (Button) findViewById(R.id.profileButton);
         profileButton.setOnClickListener(new View.OnClickListener() {
@@ -119,7 +122,9 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
             public void onClick(View v) {
                 Log.i(TAG, "Profile button clicked");
                 Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
-                startActivity(intent);
+                intent.putExtra("player", player);
+                startActivityForResult(intent, USER_REQUEST_CODE);
+//                startActivity(intent);
             }
         });
 
@@ -171,7 +176,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
             }
         });
-        
+
         playButton = (Button) findViewById(R.id.playButton);
         playButton.setOnClickListener(new View.OnClickListener() {
 
@@ -218,13 +223,8 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         //This is not really a button
         jiggle = AnimationUtils.loadAnimation(this, R.anim.jump);
 
-        levelButton = (Button) findViewById(R.id.button4);
-        if(player.points > 0) {
-            levelButton.setVisibility(View.VISIBLE);
-            levelButton.setAnimation(jiggle);
-        } else {
-            levelButton.setVisibility(View.INVISIBLE);
-        }
+        updateView();
+
 
 
     }
@@ -244,6 +244,24 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
+
+    /**
+     * Updates the view accordingly
+     * Currently only updates the level up
+     */
+    private void updateView() {
+        //Level up adjustment
+        levelButton = (Button) findViewById(R.id.button4);
+        if(player.points > 0) {
+            Log.d("CONQUEST", "Player points at (s) : " + player.points);
+            levelButton.setVisibility(View.VISIBLE);
+            levelButton.setAnimation(jiggle);
+        } else {
+            Log.d("CONQUEST", "Player points at (f) : " + player.points);
+            levelButton.clearAnimation();
+            levelButton.setVisibility(View.INVISIBLE);
+        }
+    }
 
     /**
      * Draws the boundary of the playable area and the grids over the google map
@@ -397,7 +415,6 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                 color = Color.GREEN;
                 break;
             case BLUE:
-                Log.i(TAG, "Setting color to blue");
                 color = Color.BLUE;
                 break;
             case NEUTRAL:
@@ -466,6 +483,18 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
         //TODO: Update user with the information accordingly.
 
+        player.exp += attackPointsContributed + defensePointsContributed;
+        player.distance += (Math.floor(distance * 100) / 100);
+        Log.d("Player Stats: ", "EXP : " + player.exp + " | Distance : " + player.distance);
+
+        //EXP/Point/Level Adjustment
+        while(player.exp >= 100) {
+            player.exp = player.exp - 100;
+            player.points++;
+            player.level++;
+            Log.d("Player Stats: ", "EXP : " + player.exp + " | Distance : " + player.distance);
+        }
+
         final AlertDialog.Builder runAnalysis = new AlertDialog.Builder(this);
         runAnalysis.setTitle("Post-Run Analysis");
         runAnalysis.setMessage(dialogMessage.toString());
@@ -474,11 +503,9 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                 //Do nothing
             }
         });
-        runAnalysis.show();
 
-        //Updates arrow depending if user has any points to spend.
-        if(player.points > 0) {
-        }
+        updateView();
+        runAnalysis.show();
 
     }
 
@@ -522,6 +549,12 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
             } else {
               settings = newSettings;
             }
+        }
+
+        if(requestCode == USER_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
+            player = (User) data.getSerializableExtra("new player");
+            //Update the level up
+            updateView();
         }
     }
 
@@ -588,6 +621,4 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
             }
         }
     }
-
-
 }
