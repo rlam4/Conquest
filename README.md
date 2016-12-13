@@ -14,6 +14,7 @@ Tasks:
  
 Links:
  - https://youtu.be/YmiS6uAJtVk (Prototype of 12/6)
+ - (Final prototype and progression as of 12/13)
  - https://drive.google.com/file/d/0B9xHc1nHU_3jdkMyeFRTejktRzg/view?usp=sharing, notes from 12/1
 
 How to run the app:
@@ -27,7 +28,8 @@ How to use the app:
 - Level up your character as needed.
 
 Resources:
-
+- https://developer.android.com/guide/topics/graphics/overview.html
+- https://github.com/madhur/android-chat-starter
 
 
 -----
