@@ -9,29 +9,8 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@drawable/triangle_pn"
     tools:context="com.five.conquest.ChooseTeamActivity">
-
-    <ImageButton
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:src="@drawable/ninja_button_selector"
-        android:id="@+id/ninja_button"
-        android:layout_marginTop="300dp"
-        android:background="@drawable/transparent_background"
-        android:layout_toEndOf="@+id/knight_button"
-        android:onClick="onClickNinjaOrPirate"/>
-
-    <ImageButton
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:src="@drawable/pirate_button_selector"
-        android:id="@+id/pirate_button"
-        android:background="@drawable/transparent_background"
-        android:adjustViewBounds="false"
-        android:layout_alignBottom="@+id/ninja_button"
-        android:layout_toStartOf="@+id/knight_button"
-        android:scaleType="fitCenter"
-        android:onClick="onClickNinjaOrPirate"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -54,28 +33,10 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/pirate_text"
-        android:text="Pirates"
-        android:layout_alignBaseline="@+id/ninja_text"
-        android:layout_alignBottom="@+id/ninja_text"
-        android:layout_alignStart="@+id/please" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:id="@+id/ninja_text"
-        android:text="Ninjas"
-        android:layout_below="@+id/ninja_button"
-        android:layout_alignEnd="@+id/please" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:id="@+id/knight_text"
         android:text="Knights"
-        android:layout_marginBottom="12dp"
-        android:layout_above="@+id/pirate_button"
+        android:layout_marginTop="105dp"
+        android:layout_alignTop="@+id/knight_button"
         android:layout_centerHorizontal="true" />
 
     <ImageButton
@@ -83,10 +44,51 @@
         android:layout_height="wrap_content"
         android:src="@drawable/knight_button_selector"
         android:id="@+id/knight_button"
-        android:background="@drawable/transparent_background"
+        android:background="@null"
         android:onClick="onClickKnight"
-        android:layout_above="@+id/knight_text"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="12dp" />
+        android:layout_marginTop="31dp"
+        android:layout_below="@+id/please"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ninja_text"
+        android:text="Ninjas"
+        android:layout_marginEnd="29dp"
+        android:layout_below="@+id/pirate_button"
+        android:layout_alignEnd="@+id/ninja_button" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/pirate_text"
+        android:text="Pirates"
+        android:layout_below="@+id/pirate_button"
+        android:layout_alignEnd="@+id/pirate_button"
+        android:layout_marginEnd="27dp" />
+
+    <ImageButton
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/ninja_button_selector"
+        android:id="@+id/ninja_button"
+        android:background="@null"
+        android:onClick="onClickNinjaOrPirate"
+        android:layout_marginTop="83dp"
+        android:layout_below="@+id/knight_text"
+        android:layout_alignParentEnd="true" />
+
+    <ImageButton
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/pirate_button_selector"
+        android:id="@+id/pirate_button"
+        android:background="@null"
+        android:adjustViewBounds="false"
+        android:scaleType="fitCenter"
+        android:onClick="onClickNinjaOrPirate"
+        android:layout_alignTop="@+id/ninja_button"
+        android:layout_alignParentStart="true" />
 
 </RelativeLayout>
