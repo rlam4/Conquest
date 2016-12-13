@@ -1,5 +1,7 @@
 package com.five.conquest;
 
+import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -9,16 +11,24 @@ import android.widget.Toast;
 
 public class ChooseTeamActivity extends AppCompatActivity {
 
+    private Drawable background;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_team);
+
+        background = getResources().getDrawable(R.drawable.triangle_pn);
+        background.setAlpha(90);
     }
 
 
     public void onClickKnight(View v){
         String msg = "Knights Selected!";
         Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+
+        Intent i = new Intent(ChooseTeamActivity.this, MainActivity.class);
+        startActivity(i);
 
         finish();
     }
