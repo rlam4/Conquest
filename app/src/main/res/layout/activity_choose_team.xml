@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_choose_team"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.five.conquest.ChooseTeamActivity">
+
+    <ImageButton
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/ninja_button_selector"
+        android:id="@+id/ninja_button"
+        android:layout_marginTop="300dp"
+        android:background="@drawable/transparent_background"
+        android:layout_toEndOf="@+id/knight_button"
+        android:onClick="onClickNinjaOrPirate"/>
+
+    <ImageButton
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/pirate_button_selector"
+        android:id="@+id/pirate_button"
+        android:background="@drawable/transparent_background"
+        android:adjustViewBounds="false"
+        android:layout_alignBottom="@+id/ninja_button"
+        android:layout_toStartOf="@+id/knight_button"
+        android:scaleType="fitCenter"
+        android:onClick="onClickNinjaOrPirate"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/welcome"
+        android:text="WELCOME TO CONQUEST!"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/welcome"
+        android:layout_marginTop="30dp"
+        android:id="@+id/please"
+        android:text="Please Select Your Team:"
+        android:layout_centerHorizontal="true"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/pirate_text"
+        android:text="Pirates"
+        android:layout_alignBaseline="@+id/ninja_text"
+        android:layout_alignBottom="@+id/ninja_text"
+        android:layout_alignStart="@+id/please" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:id="@+id/ninja_text"
+        android:text="Ninjas"
+        android:layout_below="@+id/ninja_button"
+        android:layout_alignEnd="@+id/please" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/knight_text"
+        android:text="Knights"
+        android:layout_marginBottom="12dp"
+        android:layout_above="@+id/pirate_button"
+        android:layout_centerHorizontal="true" />
+
+    <ImageButton
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:src="@drawable/knight_button_selector"
+        android:id="@+id/knight_button"
+        android:background="@drawable/transparent_background"
+        android:onClick="onClickKnight"
+        android:layout_above="@+id/knight_text"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="12dp" />
+
+</RelativeLayout>
