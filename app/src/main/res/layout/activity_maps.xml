@@ -89,19 +89,6 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/sosButton"
-        android:background="?attr/selectableItemBackground"
-        android:elevation="10dp"
-        tools:drawableTop="@drawable/ic_location_on_black_24dp"
-        android:drawableTop="@drawable/ic_location_on_black_24dp"
-        android:textColor="@color/cast_expanded_controller_text_color"
-        android:layout_marginTop="54dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignStart="@+id/settingsButton" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:id="@+id/button4"
         android:drawableTop="@drawable/arrow_up_white"
@@ -109,6 +96,17 @@
         android:clickable="false"
         android:layout_alignTop="@+id/toolbar2"
         android:layout_alignParentStart="true" />
+
+    <Button
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        tools:drawableTop="@drawable/sos_alert_xml"
+        android:drawableTop="@drawable/sos_alert_xml"
+        android:layout_marginTop="53dp"
+        android:id="@+id/sosButton"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="6dp" />
 
 
 </RelativeLayout>

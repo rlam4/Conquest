@@ -49,7 +49,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
+public class MainActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
     private GoogleMap mMap;
 
@@ -78,16 +78,16 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     private long stopTime;
     private int attackPointsContributed;
     private int defensePointsContributed;
-    private Marker marker;
 
     private Button profileButton;
     private Button playButton;
     private Button chatButton;
     private Button settingsButton;
     private Button levelButton; //Dummy button to place an image.
+    private Button sosButton;
 
     android.view.animation.Animation jiggle;
-    private Button sosButton;
+
 
     //TODO: Replace this default user with actual player settings
     private User player;
@@ -134,10 +134,41 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         });
 
         sosButton = (Button) findViewById(R.id.sosButton);
+        //sosButton.bringToFront();
         sosButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                marker = mMap.addMarker(new MarkerOptions().position(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude())));
+                new AlertDialog.Builder(MainActivity.this)
+                        .setTitle("Call For Backup")
+                        .setMessage("Do you want to call for backup?")
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                Log.i(TAG, "SOS button clicked");
+                                //Add marker to Map
+                                MarkerOptions sosMarkerOptions = new MarkerOptions();
+                                sosMarkerOptions.position(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()));
+                                sosMarkerOptions.title("Need Backup!");
+                                sosMarkerOptions.snippet(player.username);
+                                Marker marker = mMap.addMarker(sosMarkerOptions);
+                                marker.showInfoWindow();
+
+                                //Send message in chat
+                                Intent intent = new Intent(MainActivity.this, SocialActivity.class);
+                                Bundle b = new Bundle();
+                                b.putString("loc", "I need backup at the marked location!");
+                                intent.putExtras(b);
+                                startActivity(intent);
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        })
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
+
+
             }
         });
         
@@ -199,43 +230,12 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     @Override
-    public boolean onMarkerClick(final Marker m) {
-
-        if (m.equals(marker))
-        {
-            new AlertDialog.Builder(this)
-                    .setTitle("Call For Backup")
-                    .setMessage("Do you want to call for backup?")
-                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            Log.i(TAG, "SOS button clicked");
-                            Intent intent = new Intent(MainActivity.this, SocialActivity.class);
-                            Bundle b = new Bundle();
-                            b.putString("loc", "I need backup at " + currentLocation.getLatitude() + ", " + currentLocation.getLongitude());
-                            intent.putExtras(b);
-                            startActivity(intent);
-                        }
-                    })
-                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-
-                        }
-                    })
-                    .setIcon(android.R.drawable.ic_dialog_alert)
-                    .show();
-        }
-        return false;
-    }
-
-    @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        mMap.setOnMarkerClickListener(this);
 
         //Draws the grids of the gameboard over the map
         drawGameBoard();
-
 
         //Checks if you have location permission, then starts the location updates
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
