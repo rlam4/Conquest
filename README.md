@@ -6,6 +6,13 @@ Conquest is an application that gamifies running. Unlike other running apps, Con
 
 -----
 
+Who are we?
+
+Terry Antony
+Michael Delaney
+Raymond Lam
+Michael Xu
+
 Completed as of 12/13
 Tasks:
  - Going for a run
