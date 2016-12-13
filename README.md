@@ -17,14 +17,14 @@ Links:
  - https://drive.google.com/file/d/0B9xHc1nHU_3jdkMyeFRTejktRzg/view?usp=sharing, notes from 12/1
 
 How to run the app:
-1. Download the zip file, and import to Android Studio
-2. Simply run the app in Android studio with your phone connected.
+- Download the zip file, and import to Android Studio
+- Simply run the app in Android studio with your phone connected.
 
 How to use the app:
-1. Select a team (Only Knights is available in this version)
-2. Hit play to begin running
-3. Hit stop after finishing running session
-4. Level up your character as needed.
+- Select a team (Only Knights is available in this version)
+- Hit play to begin running
+- Hit stop after finishing running session
+- Level up your character as needed.
 
 Resources:
 
