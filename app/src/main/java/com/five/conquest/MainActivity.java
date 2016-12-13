@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -46,8 +47,13 @@ import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class MainActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
@@ -107,6 +113,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         settings = new Settings();
 
         gameboard = new GameBoard();
+        initializeGameboard();
         checkGPSPermission();
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -242,6 +249,42 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
             buildGoogleApiClient();
             mMap.setMyLocationEnabled(true);
         }
+    }
+
+    /**
+     * Initializes the gameboard based off of a preset text file scenario
+     */
+    private void initializeGameboard() {
+        AssetManager am = getApplicationContext().getAssets();
+        Random r = new Random();
+
+        try {
+            InputStream in = am.open("territories.txt");
+            BufferedReader reader = new BufferedReader(new InputStreamReader(in, "UTF-8"));
+            String line = "";
+            String[] split;
+            ArrayList<Grid> grids = gameboard.getGrids();
+            while((line = reader.readLine()) != null) {
+                split = line.split(",");
+                int pos = Integer.parseInt(split[0]);
+                switch(split[1]){
+                    case "r":
+                        grids.get(pos).setTeam(Team.RED);
+                        break;
+                    case "g":
+                        grids.get(pos).setTeam(Team.GREEN);
+                        break;
+                    case "b":
+                        grids.get(pos).setTeam(Team.BLUE);
+                        break;
+                }
+                //Each grid gets a random value between 5 and 20
+                grids.get(pos).setValue(r.nextInt(15) + 5);
+            }
+        } catch (IOException e) {
+            Log.e(TAG, e.getMessage());
+        }
+
     }
 
 
