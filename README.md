@@ -4,6 +4,9 @@ What is Conquest?
 
 Conquest is an application that gamifies running. Unlike other running apps, Conquest emphasizes the competitive spirit of running and makes it fun. In Conquest, there are 3 teams - Knights, Ninjas, and Pirates. A player will select a team and conquer territory for their team or defend it. Players can not only progress physically while their app, but there is also a game progression as they use it. 
 
+
+https://youtu.be/sx1LWrhdylk
+
 -----
 
 Who are we?
