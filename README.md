@@ -18,7 +18,10 @@ Tasks:
  - Going for a run
  - Leveling up
  - Chatting with your team/Sending an SOS Button (Sending an SOS button automatically opens the chat)
- 
+Extra Tasks:
+- Settings (Km/Miles and Colorblind feature)
+- Choosing a team (only knights in this release, future release would have the UI change according to team selected)
+
 Links:
  - https://youtu.be/YmiS6uAJtVk (Prototype of 12/6)
  - (Final prototype and progression as of 12/13)
@@ -37,7 +40,8 @@ How to use the app:
 Resources:
 - https://developer.android.com/guide/topics/graphics/overview.html
 - https://github.com/madhur/android-chat-starter
-
+- https://developers.google.com/maps/documentation/android-api/shapes
+- https://www.tutorialspoint.com/google_maps/google_maps_shapes.htm
 
 -----
 
